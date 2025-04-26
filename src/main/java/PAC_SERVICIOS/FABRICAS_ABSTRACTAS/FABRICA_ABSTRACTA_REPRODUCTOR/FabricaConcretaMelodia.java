@@ -1,5 +1,8 @@
 package PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR;
 
+import PAC_BD.Conector_BD;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,40 +16,46 @@ public class FabricaConcretaMelodia extends FabricaAbstractaMusica {
 
     @Override
     public Musica crearMusica() {
-        List<String> instrumentos = new ArrayList<>();
-        String titulo, artista;
-        int duracion, tiempoActual = 0, nivelRelajacion;
+        Melodia melodia = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        switch (seleccion) {
-            case 1:
-                titulo = "Meditación Lunar";
-                artista = "Ambient Flow";
-                duracion = 300;
-                instrumentos.add("Flauta");
-                instrumentos.add("Piano");
-                instrumentos.add("Pad sintetizado");
-                nivelRelajacion = 9;
-                break;
+        try {
+            conn = Conector_BD.conectar();
+            String query = "SELECT * FROM melodia WHERE idMelodia = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, seleccion);
+            rs = stmt.executeQuery();
 
-            case 2:
-                titulo = "Bruma de la Mañana";
-                artista = "Calma Interior";
-                duracion = 240;
-                instrumentos.add("Violín");
-                instrumentos.add("Arpa");
-                nivelRelajacion = 8;
-                break;
+            if (rs.next()) {
+                int idMelodia = rs.getInt("idMelodia");
+                int idArtista = rs.getInt("idArtista");
+                String titulo = rs.getString("titulo");
+                int duracion = rs.getTime("duracion").toLocalTime().toSecondOfDay();
+                int numReproducciones = rs.getInt("numReproducciones");
+                String fecha = rs.getString("fechaLanzamiento");
+                int nivelRelajacion = rs.getInt("nivelRelajacion");
 
-            default:
-                titulo = "Ecos del Bosque";
-                artista = "Sonido Natural";
-                duracion = 270;
-                instrumentos.add("Viento");
-                instrumentos.add("Piano");
-                nivelRelajacion = 7;
-                break;
+                // Instrumentos no están en la tabla, se inicializa vacío
+                List<String> instrumentos = new ArrayList<>();
+
+                melodia = new Melodia(idMelodia, idArtista, titulo, duracion, 0,
+                        numReproducciones, fecha, instrumentos, nivelRelajacion);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error al cargar melodía desde la base de datos: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("⚠️ Error cerrando la conexión: " + e.getMessage());
+            }
         }
 
-        return new Melodia(titulo, artista, duracion, tiempoActual, instrumentos, nivelRelajacion);
+        return melodia;
     }
 }

@@ -1,6 +1,12 @@
 package PAC_REPRODUCTOR_DE_MUSICA.MODELO;
 
+import PAC_BD.Conector_BD;
 import PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR.Musica;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class ReproductorMusical {
 
@@ -13,7 +19,34 @@ public class ReproductorMusical {
     public String reproducir(Musica musica) {
         if (musica == null) return "❌ No hay música cargada.";
         reproduciendo = true;
-        return "▶️ Reproduciendo: " + musica.getTitulo() + " - " + musica.getArtista();
+
+        String nombreArtista = "Desconocido";
+        if (musica.getIdArtista() > 0) {
+            nombreArtista = obtenerNombreArtista(musica.getIdArtista());
+        }
+
+        return "▶️ Reproduciendo: " + musica.getTitulo() + " - " + nombreArtista;
+    }
+
+    private String obtenerNombreArtista(int idArtista) {
+        String nombreArtista = "Desconocido";
+
+        try (Connection conn = Conector_BD.conectar();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT nombreArtistico FROM artista WHERE idArtista = ?"
+             )) {
+
+            stmt.setInt(1, idArtista);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nombreArtista = rs.getString("nombreArtistico");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("⚠️ Error al obtener nombre del artista: " + e.getMessage());
+        }
+
+        return nombreArtista;
     }
 
     public void pausar() {

@@ -1,5 +1,12 @@
 package PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR;
 
+import PAC_BD.Conector_BD;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class FabricaConcretaPlaylist extends FabricaAbstractaListaR {
 
     private int seleccion;
@@ -10,21 +17,32 @@ public class FabricaConcretaPlaylist extends FabricaAbstractaListaR {
 
     @Override
     public ListaR crearLista() {
-        Playlist playlist;
+        Playlist playlist = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        switch (seleccion) {
-            case 1:
-                playlist = new Playlist("Lofi para estudiar", "/img/portadas/lofi.jpg");
-                break;
-            case 2:
-                playlist = new Playlist("Pop Latino", "/img/portadas/pop.jpg");
-                break;
-            case 3:
-                playlist = new Playlist("Jazz relajante", "/img/portadas/jazz.jpg");
-                break;
-            default:
-                playlist = new Playlist("Mi Playlist", "/img/portadas/default.jpg");
-                break;
+        try {
+            conn = Conector_BD.conectar();
+            String query = "SELECT * FROM playlist WHERE idPlaylist = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, seleccion);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                playlist = new Playlist(rs); // Usa directamente el constructor que recibe un ResultSet
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error al cargar playlist desde la base de datos: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("⚠️ Error cerrando la conexión: " + e.getMessage());
+            }
         }
 
         return playlist;

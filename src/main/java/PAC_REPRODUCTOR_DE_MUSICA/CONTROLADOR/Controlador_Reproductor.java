@@ -7,8 +7,6 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet(name = "ControladorReproductor", value = "/controlador-reproductor")
 public class Controlador_Reproductor extends HttpServlet {
@@ -38,26 +36,6 @@ public class Controlador_Reproductor extends HttpServlet {
         String accion = request.getParameter("accion");
         String seleccionStr = request.getParameter("seleccion");
         int seleccion = seleccionStr != null ? Integer.parseInt(seleccionStr) : 1;
-
-        List<Musica> listaPistas = new ArrayList<>();
-
-        List<String> letra1 = new ArrayList<>();
-        letra1.add("Verso 1");
-        letra1.add("Verso 2");
-
-        List<String> letra2 = new ArrayList<>();
-        letra2.add("Verso A");
-        letra2.add("Verso B");
-
-        List<String> instrumentos = new ArrayList<>();
-        instrumentos.add("Flauta");
-        instrumentos.add("Piano");
-        instrumentos.add("Pad");
-
-        listaPistas.add(new Cancion("Despertar", "Aurora Azul", 210, 0, letra1, "https://youtu.be/video1"));
-        listaPistas.add(new Cancion("Beat Urbano", "Ritmo Callejero", 200, 0, letra2, "https://youtu.be/video2"));
-        listaPistas.add(new Melodia("Meditación Lunar", "Ambient Flow", 300, 0, instrumentos, 9));
-        request.setAttribute("listaPistas", listaPistas);
 
         if (accion == null) {
             request.setAttribute("musica", gestor.getMusicaActual());
@@ -134,7 +112,8 @@ public class Controlador_Reproductor extends HttpServlet {
                 return;
 
             case "volverReproductor":
-                request.setAttribute("listaPistas", listaPistas);
+                request.setAttribute("musica", gestor.getMusicaActual());
+                request.setAttribute("lista", gestor.getListaActual());
                 RequestDispatcher volver = request.getRequestDispatcher("IU_Gestor_Reproductor.jsp");
                 volver.forward(request, response);
                 return;

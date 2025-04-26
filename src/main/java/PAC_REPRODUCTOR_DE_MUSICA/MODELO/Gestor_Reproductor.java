@@ -44,7 +44,11 @@ public class Gestor_Reproductor {
     // ==== ACCIONES DEL REPRODUCTOR ====
 
     public String reproducirMusica() {
-        return reproductor.reproducir(musicaActual);
+        if (musicaActual != null) {
+            return reproductor.reproducir(musicaActual);
+        } else {
+            return "⚠️ No hay música cargada para reproducir.";
+        }
     }
 
     public void pausarMusica() {
@@ -52,39 +56,61 @@ public class Gestor_Reproductor {
     }
 
     public void adelantarMusica(int segundos) {
-        reproductor.adelantar(musicaActual, segundos);
+        if (musicaActual != null) {
+            reproductor.adelantar(musicaActual, segundos);
+        }
     }
 
     public void retrocederMusica(int segundos) {
-        reproductor.retroceder(musicaActual, segundos);
+        if (musicaActual != null) {
+            reproductor.retroceder(musicaActual, segundos);
+        }
     }
 
     // ==== VISUALIZACIÓN DE DATOS ====
 
     public String verDatosMusica() {
-        return datos.generarVista(musicaActual);
+        if (musicaActual != null) {
+            return datos.generarVista(musicaActual);
+        } else {
+            return "⚠️ No hay información disponible.";
+        }
     }
 
     public String verResumenLista() {
-        return manejador.obtenerResumen(listaActual);
+        if (listaActual != null) {
+            return manejador.obtenerResumen(listaActual);
+        } else {
+            return "⚠️ No hay lista cargada.";
+        }
     }
 
     // ==== GESTIÓN DE PLAYLISTS ====
 
     public void agregarMusicaALista(Musica musica) {
-        manejador.agregarMusica(listaActual, musica);
+        if (listaActual != null && musica != null) {
+            manejador.agregarMusica(listaActual, musica);
+        }
     }
 
     public void eliminarMusicaDeLista(Musica musica) {
-        manejador.eliminarMusica(listaActual, musica);
+        if (listaActual != null && musica != null) {
+            manejador.eliminarMusica(listaActual, musica);
+        }
     }
 
     public void vaciarLista() {
-        manejador.vaciarLista(listaActual);
+        if (listaActual != null) {
+            manejador.vaciarLista(listaActual);
+        }
     }
 
     public int obtenerCantidadDePistas() {
-        return manejador.getCantidadCanciones(listaActual);
+        if (listaActual != null) {
+            return manejador.getCantidadCanciones(listaActual);
+        } else {
+            return 0;
+        }
     }
 
     // ==== Getters opcionales para IU ====

@@ -1,5 +1,8 @@
 package PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR;
 
+import PAC_BD.Conector_BD;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,35 +16,50 @@ public class FabricaConcretaCancion extends FabricaAbstractaMusica {
 
     @Override
     public Musica crearMusica() {
-        List<String> letra = new ArrayList<>();
-        String videoURL;
-        Cancion cancion;
+        Cancion cancion = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        switch (seleccion) {
-            case 1:
-                letra.add("En la noche brilla el sol");
-                letra.add("Caminamos sin razón");
-                letra.add("Los recuerdos ya se van");
-                letra.add("Y despierto en tu canción");
-                videoURL = "https://youtu.be/video1";
-                cancion = new Cancion("Despertar", "Aurora Azul", 210, 0, letra, videoURL);
-                break;
+        try {
+            conn = Conector_BD.conectar();
+            String query = "SELECT * FROM cancion WHERE idCancion = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, seleccion);
+            rs = stmt.executeQuery();
 
-            case 2:
-                letra.add("Fluye la ciudad al ritmo del tren");
-                letra.add("Mil historias que vienen y van");
-                letra.add("El concreto no ahoga mi voz");
-                letra.add("Sigo el beat, no miro atrás");
-                videoURL = "https://youtu.be/video2";
-                cancion = new Cancion("Beat Urbano", "Ritmo Callejero", 200, 0, letra, videoURL);
-                break;
+            if (rs.next()) {
+                int idCancion = rs.getInt("idCancion");
+                int idArtista = rs.getInt("idArtista");
+                String titulo = rs.getString("titulo");
+                int duracion = rs.getTime("duracion").toLocalTime().toSecondOfDay();
+                int numReproducciones = rs.getInt("numReproducciones");
+                String fecha = rs.getString("fechaLanzamiento");
+                String videoURL = rs.getString("enlaceVideo");
 
-            default:
-                letra.add("Silencio entre las nubes");
-                letra.add("Una melodía azul");
-                videoURL = "https://youtu.be/videoDefault";
-                cancion = new Cancion("Nube", "Minimal Sound", 190, 0, letra, videoURL);
-                break;
+                // Convertir la letra (TEXT) a lista de versos
+                List<String> letra = new ArrayList<>();
+                String texto = rs.getString("letra");
+                if (texto != null) {
+                    for (String verso : texto.split("\\n")) {
+                        letra.add(verso.trim());
+                    }
+                }
+
+                cancion = new Cancion(idCancion, idArtista, titulo, duracion, 0,
+                        numReproducciones, fecha, letra, videoURL);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error al cargar canción desde la base de datos: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("⚠️ Error cerrando la conexión: " + e.getMessage());
+            }
         }
 
         return cancion;

@@ -1,16 +1,38 @@
 package PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Cancion extends Musica {
     private List<String> letra;
     private String videoURL;
 
-    public Cancion(String titulo, String artista, int duracion, int tiempoActual, List<String> letra, String videoURL) {
-        super(titulo, artista, duracion, tiempoActual);
-        this.letra = new ArrayList<>(letra);
+    public Cancion(int idCancion, int idArtista, String titulo, int duracion, int tiempoActual,
+                   int numReproducciones, String fechaLanzamiento, List<String> letra, String videoURL) {
+        super(idCancion, idArtista, titulo, duracion, tiempoActual, numReproducciones, fechaLanzamiento);
+        this.letra = letra;
         this.videoURL = videoURL;
+        this.setTipo("Cancion");
+    }
+
+    // Constructor desde ResultSet (para consultas SQL)
+    public Cancion(ResultSet rs) throws SQLException {
+        super(
+                rs.getInt("idCancion"),
+                rs.getInt("idArtista"),
+                rs.getString("titulo"),
+                rs.getTime("duracion").toLocalTime().toSecondOfDay(), // Convierte TIME a int (segundos)
+                0, // tiempoActual inicia en 0
+                rs.getInt("numReproducciones"),
+                rs.getDate("fechaLanzamiento").toString()
+        );
+
+        String letraSQL = rs.getString("letra");
+        this.letra = letraSQL != null ? Arrays.asList(letraSQL.split("\n")) : new ArrayList<>();
+        this.videoURL = rs.getString("enlaceVideo");
         this.setTipo("Cancion");
     }
 

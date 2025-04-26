@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ListaR {
+    protected int id; // ID común
     protected String nombre;
-    protected String portadaURL;
+    protected String portadaURL; // Solo relevante para álbumes
     protected List<Musica> contenido;
 
     public ListaR(String nombre) {
@@ -18,8 +19,20 @@ public abstract class ListaR {
         this.portadaURL = portadaURL;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public List<Musica> getContenido() {

@@ -1,6 +1,12 @@
 package PAC_REPRODUCTOR_DE_MUSICA.MODELO;
 
+import PAC_BD.Conector_BD;
 import PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DatosCancion {
 
@@ -9,9 +15,16 @@ public class DatosCancion {
 
         StringBuilder vista = new StringBuilder();
         vista.append("<h2>").append(musica.getTitulo()).append("</h2>");
-        vista.append("<p>🎤 Artista: ").append(musica.getArtista()).append("</p>");
+
+        // Obtener nombre del artista usando el idArtista
+        String nombreArtista = obtenerNombreArtista(musica.getIdArtista());
+        vista.append("<p>🎤 Artista: ").append(nombreArtista != null ? nombreArtista : "Desconocido").append("</p>");
+
         vista.append("<p>⏱️ Duración: ").append(musica.getDuracion()).append(" segundos</p>");
         vista.append("<p>▶️ Tiempo actual: ").append(musica.getTiempoActual()).append(" segundos</p>");
+
+        // NUEVO: Mostrar la fecha de lanzamiento
+        vista.append("<p>📅 Fecha de lanzamiento: ").append(musica.getFechaLanzamiento()).append("</p>");
 
         if (musica instanceof Cancion) {
             Cancion c = (Cancion) musica;
@@ -34,5 +47,36 @@ public class DatosCancion {
         }
 
         return vista.toString();
+    }
+
+    private String obtenerNombreArtista(int idArtista) {
+        String nombre = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = Conector_BD.conectar();
+            String sql = "SELECT nombreArtistico FROM artista WHERE idArtista = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idArtista);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                nombre = rs.getString("nombreArtistico");
+            }
+        } catch (SQLException e) {
+            System.err.println("⚠️ Error al obtener el nombre del artista: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("⚠️ Error cerrando conexión: " + e.getMessage());
+            }
+        }
+
+        return nombre;
     }
 }
