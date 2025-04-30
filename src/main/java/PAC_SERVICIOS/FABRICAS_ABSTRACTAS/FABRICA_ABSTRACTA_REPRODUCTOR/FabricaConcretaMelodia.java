@@ -30,18 +30,28 @@ public class FabricaConcretaMelodia extends FabricaAbstractaMusica {
 
             if (rs.next()) {
                 int idMelodia = rs.getInt("idMelodia");
+                int idCancion = rs.getInt("idCancion"); // porque hereda de Musica
                 int idArtista = rs.getInt("idArtista");
                 String titulo = rs.getString("titulo");
                 int duracion = rs.getTime("duracion").toLocalTime().toSecondOfDay();
                 int numReproducciones = rs.getInt("numReproducciones");
                 String fecha = rs.getString("fechaLanzamiento");
-                int nivelRelajacion = rs.getInt("nivelRelajacion");
+                int nivelRelajacion = rs.getInt("nivelRelajamiento");
+
+                // 👇 Obtener binarios
+                byte[] imagen = rs.getBytes("imagenPortada");
+                byte[] audio = rs.getBytes("archivoAudio");
 
                 // Instrumentos no están en la tabla, se inicializa vacío
                 List<String> instrumentos = new ArrayList<>();
 
-                melodia = new Melodia(idMelodia, idArtista, titulo, duracion, 0,
-                        numReproducciones, fecha, instrumentos, nivelRelajacion);
+                // 👇 Constructor actualizado con binarios
+                melodia = new Melodia(
+                        idCancion, idArtista, titulo, duracion, 0,
+                        numReproducciones, fecha, imagen, audio,
+                        instrumentos, nivelRelajacion
+                );
+                melodia.setIdMelodia(idMelodia);
             }
 
         } catch (SQLException e) {

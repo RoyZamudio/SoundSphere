@@ -32,7 +32,7 @@
         <div class="nav-buttons">
             <button class="nav-button active">
                 <i class="fas fa-music"></i>
-                <span>Reproductor</span>
+                <span>Music Player</span>
             </button>
             <button class="nav-button">
                 <i class="fas fa-broadcast-tower"></i>
@@ -40,11 +40,11 @@
             </button>
             <button class="nav-button">
                 <i class="fas fa-users"></i>
-                <span>Red Social</span>
+                <span>Social Network</span>
             </button>
             <button class="nav-button">
                 <i class="fas fa-user"></i>
-                <span>Mi Cuenta</span>
+                <span>User</span>
             </button>
 
             <label class="dark-mode-toggle">
@@ -153,8 +153,17 @@
 
             <div class="panel-content">
                 <div class="song-info-container">
+                    <!-- Song Cover / Image -->
                     <div class="song-cover-large">
+                        <%
+                            Musica currentMusic = (Musica)request.getAttribute("musica");
+                            if (currentMusic != null && currentMusic.getImagen() != null && currentMusic.getImagen().length > 0) {
+                                String base64Image = java.util.Base64.getEncoder().encodeToString(currentMusic.getImagen());
+                        %>
+                        <img src="data:image/jpeg;base64,<%= base64Image %>" alt="<%= currentMusic.getTitulo() %>" class="song-cover-image">
+                        <% } else { %>
                         <i class="fas fa-music"></i>
+                        <% } %>
                     </div>
 
                     <%-- La información de la canción se actualiza dinámicamente --%>
@@ -172,6 +181,18 @@
                     <%
                         }
                     %>
+
+                    <!-- Audio Player -->
+                    <% if (currentMusic != null && currentMusic.getAudio() != null && currentMusic.getAudio().length > 0) {
+                        String base64Audio = java.util.Base64.getEncoder().encodeToString(currentMusic.getAudio());
+                    %>
+                    <div class="audio-player-container">
+                        <audio id="audioPlayer" controls>
+                            <source src="data:audio/mp3;base64,<%= base64Audio %>" type="audio/mp3">
+                            Tu navegador no soporta el elemento de audio.
+                        </audio>
+                    </div>
+                    <% } %>
 
                     <form method="post" action="reproductor" class="info-form">
                         <input type="hidden" name="accion" value="verDatos" />
@@ -354,10 +375,68 @@
         });
     }
 
+    // Audio player synchronization
+    function setupAudioSync() {
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+        const pauseButton = document.getElementById('pauseButton');
+        const playForm = document.getElementById('playForm');
+        const pauseForm = document.getElementById('pauseForm');
+
+        if (audioPlayer && playButton && pauseButton) {
+            // Sync HTML5 audio player with custom play/pause buttons
+            audioPlayer.addEventListener('play', function() {
+                playButton.style.display = 'none';
+                pauseButton.style.display = 'flex';
+                updateAllPlayPauseStates(true);
+
+                // Prevent form submission when audio controls are used directly
+                if (playForm) {
+                    playForm.onsubmit = function(e) {
+                        e.preventDefault();
+                        return false;
+                    };
+                }
+            });
+
+            audioPlayer.addEventListener('pause', function() {
+                pauseButton.style.display = 'none';
+                playButton.style.display = 'flex';
+                updateAllPlayPauseStates(false);
+
+                // Prevent form submission when audio controls are used directly
+                if (pauseForm) {
+                    pauseForm.onsubmit = function(e) {
+                        e.preventDefault();
+                        return false;
+                    };
+                }
+            });
+
+            // Make custom buttons control the audio player
+            playButton.addEventListener('click', function(e) {
+                if (audioPlayer) {
+                    e.preventDefault(); // Prevent form submission
+                    audioPlayer.play();
+                    return false;
+                }
+            });
+
+            pauseButton.addEventListener('click', function(e) {
+                if (audioPlayer) {
+                    e.preventDefault(); // Prevent form submission
+                    audioPlayer.pause();
+                    return false;
+                }
+            });
+        }
+    }
+
     // Inicializar cuando el DOM esté cargado
     document.addEventListener('DOMContentLoaded', function() {
         setupPlayPauseToggle();
         setupSongListHandlers();
+        setupAudioSync();
 
         // Comprobamos si hay una canción activa al cargar la página
         const activeItem = document.querySelector('.song-item.active');

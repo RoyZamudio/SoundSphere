@@ -60,7 +60,7 @@ public class FabricaConcretaAlbum extends FabricaAbstractaListaR {
         ResultSet rs = null;
 
         try {
-            String query = "SELECT c.* FROM cancion c JOIN cancion_album ca ON c.idCancion = ca.idCancion WHERE ca.idAlbum = ?";
+            String query = "SELECT c.* FROM cancion c JOIN cancionmelodiaalbum ca ON c.idCancion = ca.idCancion WHERE ca.idAlbum = ?";
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, idAlbum);
             rs = stmt.executeQuery();
@@ -71,6 +71,8 @@ public class FabricaConcretaAlbum extends FabricaAbstractaListaR {
                 String titulo = rs.getString("titulo");
                 int duracion = rs.getTime("duracion").toLocalTime().toSecondOfDay();
                 int numReproducciones = rs.getInt("numReproducciones");
+                byte imagen[] = rs.getBytes("imagen");
+                byte audio[] = rs.getBytes("audio");
                 String fecha = rs.getDate("fechaLanzamiento").toString();
                 String videoURL = rs.getString("enlaceVideo");
 
@@ -83,18 +85,18 @@ public class FabricaConcretaAlbum extends FabricaAbstractaListaR {
                     }
                 }
 
-                Cancion cancion = new Cancion(idCancion, idArtista, titulo, duracion, 0, numReproducciones, fecha, letra, videoURL);
+                Cancion cancion = new Cancion(idCancion, idArtista, titulo, duracion, 0, numReproducciones, fecha, imagen, audio, letra, videoURL);
                 lista.add(cancion);
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ Error al cargar canciones del álbum: " + e.getMessage());
+            System.err.println("Error al cargar canciones del álbum: " + e.getMessage());
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
             } catch (SQLException e) {
-                System.err.println("⚠️ Error cerrando conexión secundaria: " + e.getMessage());
+                System.err.println("Error cerrando conexión secundaria: " + e.getMessage());
             }
         }
 

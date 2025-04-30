@@ -8,10 +8,12 @@ public abstract class Musica {
     protected int tiempoActual;
     protected int numReproducciones;
     protected String fechaLanzamiento;
+    protected byte[] imagen;
+    protected byte[] audio;
     private String tipo;
 
     public Musica(int idCancion, int idArtista, String titulo, int duracion, int tiempoActual,
-                  int numReproducciones, String fechaLanzamiento) {
+                  int numReproducciones, String fechaLanzamiento, byte[] imagen, byte[] audio) {
         this.idCancion = idCancion;
         this.idArtista = idArtista;
         this.titulo = titulo;
@@ -19,6 +21,8 @@ public abstract class Musica {
         this.tiempoActual = tiempoActual;
         this.numReproducciones = numReproducciones;
         this.fechaLanzamiento = fechaLanzamiento;
+        this.imagen = imagen;
+        this.audio = audio;
     }
 
     public int getIdCancion() {
@@ -76,6 +80,14 @@ public abstract class Musica {
     public void setFechaLanzamiento(String fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
     }
+
+    public byte[] getImagen() { return imagen; }
+
+    public void setImagen(byte[] imagen) { this.imagen = imagen; }
+
+    public byte[] getAudio() { return audio; }
+
+    public void setAudio(byte[] audio) { this.audio = audio; }
 
     public String getTipo() {
         return tipo;

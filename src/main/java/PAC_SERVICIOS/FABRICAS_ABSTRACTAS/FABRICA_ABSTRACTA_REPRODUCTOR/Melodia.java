@@ -12,8 +12,8 @@ public class Melodia extends Musica {
 
     // Constructor normal
     public Melodia(int idCancion, int idArtista, String titulo, int duracion, int tiempoActual,
-                   int numReproducciones, String fechaLanzamiento, List<String> instrumentos, int nivelRelajacion) {
-        super(idCancion, idArtista, titulo, duracion, tiempoActual, numReproducciones, fechaLanzamiento);
+                   int numReproducciones, String fechaLanzamiento, byte[] imagen, byte[]audio, List<String> instrumentos, int nivelRelajacion) {
+        super(idCancion, idArtista, titulo, duracion, tiempoActual, numReproducciones, fechaLanzamiento, imagen, audio);
         this.instrumentos = new ArrayList<>(instrumentos);
         this.nivelRelajacion = nivelRelajacion;
         this.setTipo("Melodia");
@@ -28,7 +28,9 @@ public class Melodia extends Musica {
                 rs.getTime("duracion").toLocalTime().toSecondOfDay(),
                 0, // tiempoActual siempre inicia en 0
                 rs.getInt("numReproducciones"),
-                rs.getDate("fechaLanzamiento").toString()
+                rs.getDate("fechaLanzamiento").toString(),
+                rs.getBytes("imagen"),
+                rs.getBytes("audio")
         );
         this.idMelodia = rs.getInt("idMelodia");
         this.nivelRelajacion = rs.getInt("nivelRelajamiento"); // cuidado con el nombre en BD, que sea correcto

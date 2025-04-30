@@ -539,6 +539,7 @@ button {
     text-align: center;
 }
 
+/* Song cover image styling */
 .song-cover-large {
     width: 160px;
     height: 160px;
@@ -550,6 +551,32 @@ button {
     font-size: 48px;
     color: var(--dark-slate);
     margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.song-cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.song-cover-image:hover {
+    transform: scale(1.05);
+}
+
+/* Audio player styling */
+.audio-player-container {
+    margin: 16px 0;
+    width: 100%;
+}
+
+audio#audioPlayer {
+    width: 100%;
+    height: 36px;
+    border-radius: 4px;
+    background-color: var(--soft-teal);
 }
 
 .song-details {
@@ -619,6 +646,36 @@ button {
 
 .app-logo:hover {
     opacity: 1;
+}
+
+.imagen-miniatura {
+    width: 120px;
+    height: 120px;
+    margin: 10px auto;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.imagen-miniatura img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.audio-preview {
+    background-color: rgba(34, 34, 36, 0.6);
+    padding: 5px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+.letra-cancion, .instrumentos-lista {
+    background-color: rgba(34, 34, 36, 0.4);
+    padding: 8px 24px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.letra-cancion li, .instrumentos-lista li {
+    margin-bottom: 5px;
+    line-height: 1.4;
 }
 
 /* Media Queries para Dispositivos Móviles */

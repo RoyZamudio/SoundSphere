@@ -11,8 +11,8 @@ public class Cancion extends Musica {
     private String videoURL;
 
     public Cancion(int idCancion, int idArtista, String titulo, int duracion, int tiempoActual,
-                   int numReproducciones, String fechaLanzamiento, List<String> letra, String videoURL) {
-        super(idCancion, idArtista, titulo, duracion, tiempoActual, numReproducciones, fechaLanzamiento);
+                   int numReproducciones, String fechaLanzamiento, byte[] imagen, byte[] audio, List<String> letra, String videoURL) {
+        super(idCancion, idArtista, titulo, duracion, tiempoActual, numReproducciones, fechaLanzamiento, audio, imagen);
         this.letra = letra;
         this.videoURL = videoURL;
         this.setTipo("Cancion");
@@ -27,7 +27,9 @@ public class Cancion extends Musica {
                 rs.getTime("duracion").toLocalTime().toSecondOfDay(), // Convierte TIME a int (segundos)
                 0, // tiempoActual inicia en 0
                 rs.getInt("numReproducciones"),
-                rs.getDate("fechaLanzamiento").toString()
+                rs.getDate("fechaLanzamiento").toString(),
+                rs.getBytes("imagen"),
+                rs.getBytes("audio")
         );
 
         String letraSQL = rs.getString("letra");

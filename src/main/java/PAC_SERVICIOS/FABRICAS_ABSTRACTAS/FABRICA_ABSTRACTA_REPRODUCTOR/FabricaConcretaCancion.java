@@ -37,6 +37,10 @@ public class FabricaConcretaCancion extends FabricaAbstractaMusica {
                 String fecha = rs.getString("fechaLanzamiento");
                 String videoURL = rs.getString("enlaceVideo");
 
+                // 👇 Obtener binarios
+                byte[] imagen = rs.getBytes("imagenPortada");
+                byte[] audio = rs.getBytes("archivoAudio");
+
                 // Convertir la letra (TEXT) a lista de versos
                 List<String> letra = new ArrayList<>();
                 String texto = rs.getString("letra");
@@ -46,8 +50,11 @@ public class FabricaConcretaCancion extends FabricaAbstractaMusica {
                     }
                 }
 
-                cancion = new Cancion(idCancion, idArtista, titulo, duracion, 0,
-                        numReproducciones, fecha, letra, videoURL);
+                // 👇 Crear objeto Cancion con todo
+                cancion = new Cancion(
+                        idCancion, idArtista, titulo, duracion, 0,
+                        numReproducciones, fecha, imagen, audio, letra, videoURL
+                );
             }
 
         } catch (SQLException e) {

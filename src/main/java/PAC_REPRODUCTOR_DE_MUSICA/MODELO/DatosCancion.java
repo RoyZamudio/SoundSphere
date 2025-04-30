@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
 
 public class DatosCancion {
 
@@ -23,13 +24,32 @@ public class DatosCancion {
         vista.append("<p>⏱️ Duración: ").append(musica.getDuracion()).append(" segundos</p>");
         vista.append("<p>▶️ Tiempo actual: ").append(musica.getTiempoActual()).append(" segundos</p>");
 
-        // NUEVO: Mostrar la fecha de lanzamiento
+        // Fecha de lanzamiento
         vista.append("<p>📅 Fecha de lanzamiento: ").append(musica.getFechaLanzamiento()).append("</p>");
 
+        // Mostrar la imagen si está disponible (miniatura integrada en los detalles)
+        if (musica.getImagen() != null && musica.getImagen().length > 0) {
+            String base64Image = Base64.getEncoder().encodeToString(musica.getImagen());
+            vista.append("<div class='imagen-miniatura'><img src='data:image/jpeg;base64,")
+                    .append(base64Image)
+                    .append("' alt='Portada' /></div>");
+        }
+
+        // Mostrar reproductor de audio pequeño si está disponible
+        if (musica.getAudio() != null && musica.getAudio().length > 0) {
+            String base64Audio = Base64.getEncoder().encodeToString(musica.getAudio());
+            vista.append("<div class='audio-preview'>")
+                    .append("<audio controls style='width:100%; margin:10px 0;'>")
+                    .append("<source src='data:audio/mp3;base64,").append(base64Audio).append("' type='audio/mp3'>")
+                    .append("Tu navegador no soporta el elemento de audio.")
+                    .append("</audio></div>");
+        }
+
+        // Detalles específicos por tipo de música
         if (musica instanceof Cancion) {
             Cancion c = (Cancion) musica;
-            vista.append("<p>🎬 Video: <a href='").append(c.getVideoURL()).append("'>Ver</a></p>");
-            vista.append("<h4>Letra:</h4><ul>");
+            vista.append("<p>🎬 Video: <a href='").append(c.getVideoURL()).append("' target='_blank'>Ver</a></p>");
+            vista.append("<h4>Letra:</h4><ul class='letra-cancion'>");
             for (String verso : c.getLetra()) {
                 vista.append("<li>").append(verso).append("</li>");
             }
@@ -38,7 +58,7 @@ public class DatosCancion {
 
         if (musica instanceof Melodia) {
             Melodia m = (Melodia) musica;
-            vista.append("<h4>🎼 Instrumentos:</h4><ul>");
+            vista.append("<h4>🎼 Instrumentos:</h4><ul class='instrumentos-lista'>");
             for (String instrumento : m.getInstrumentos()) {
                 vista.append("<li>").append(instrumento).append("</li>");
             }
