@@ -7,8 +7,10 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "ControladorReproductor", value = "/controlador-reproductor")
+// Update URL mapping to match your application context
+@WebServlet(name = "ControladorReproductor", urlPatterns = {"/reproductor", "/Reproductor"})
 public class Controlador_Reproductor extends HttpServlet {
 
     private Gestor_Reproductor gestor;
@@ -37,9 +39,15 @@ public class Controlador_Reproductor extends HttpServlet {
         String seleccionStr = request.getParameter("seleccion");
         int seleccion = seleccionStr != null ? Integer.parseInt(seleccionStr) : 1;
 
+        // Obtener las pistas desde la base de datos
+        List<Musica> listaPistas = gestor.obtenerPistasDesdeBD();
+        request.setAttribute("listaPistas", listaPistas);
+
         if (accion == null) {
+            // Mostrar la música y la lista actual
             request.setAttribute("musica", gestor.getMusicaActual());
             request.setAttribute("lista", gestor.getListaActual());
+            request.setAttribute("reproductor", gestor.getReproductor());
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("IU_Gestor_Reproductor.jsp");
             dispatcher.forward(request, response);
@@ -49,10 +57,13 @@ public class Controlador_Reproductor extends HttpServlet {
         switch (accion) {
             case "crearCancion":
                 gestor.crearCancion(seleccion);
+                // Reproducir automáticamente al seleccionar una canción
+                request.setAttribute("mensaje", gestor.reproducirMusica());
                 break;
 
             case "crearMelodia":
                 gestor.crearMelodia(seleccion);
+                request.setAttribute("mensaje", gestor.reproducirMusica());
                 break;
 
             case "crearPlaylist":
@@ -94,9 +105,9 @@ public class Controlador_Reproductor extends HttpServlet {
                 Musica m = gestor.getMusicaActual();
                 if (m != null) {
                     gestor.agregarMusicaALista(m);
-                    request.setAttribute("mensaje", "✅ Pista agregada a la lista.");
+                    request.setAttribute("mensaje", "Pista agregada a la lista.");
                 } else {
-                    request.setAttribute("mensaje", "⚠️ No hay pista actual para agregar.");
+                    request.setAttribute("mensaje", "No hay pista actual para agregar.");
                 }
                 break;
 
@@ -107,6 +118,7 @@ public class Controlador_Reproductor extends HttpServlet {
 
             case "verGestorListas":
                 request.setAttribute("lista", gestor.getListaActual());
+                request.setAttribute("reproductor", gestor.getReproductor());
                 RequestDispatcher irAPlaylists = request.getRequestDispatcher("IU_Gestor_Playlists.jsp");
                 irAPlaylists.forward(request, response);
                 return;
@@ -114,6 +126,7 @@ public class Controlador_Reproductor extends HttpServlet {
             case "volverReproductor":
                 request.setAttribute("musica", gestor.getMusicaActual());
                 request.setAttribute("lista", gestor.getListaActual());
+                request.setAttribute("reproductor", gestor.getReproductor());
                 RequestDispatcher volver = request.getRequestDispatcher("IU_Gestor_Reproductor.jsp");
                 volver.forward(request, response);
                 return;
@@ -121,6 +134,7 @@ public class Controlador_Reproductor extends HttpServlet {
 
         request.setAttribute("musica", gestor.getMusicaActual());
         request.setAttribute("lista", gestor.getListaActual());
+        request.setAttribute("reproductor", gestor.getReproductor());
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("IU_Gestor_Reproductor.jsp");
         dispatcher.forward(request, response);

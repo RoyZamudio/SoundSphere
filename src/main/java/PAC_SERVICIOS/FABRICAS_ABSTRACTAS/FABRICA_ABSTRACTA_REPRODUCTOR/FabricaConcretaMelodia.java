@@ -45,14 +45,14 @@ public class FabricaConcretaMelodia extends FabricaAbstractaMusica {
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ Error al cargar melodía desde la base de datos: " + e.getMessage());
+            System.err.println("Error al cargar melodía desde la base de datos: " + e.getMessage());
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
                 if (conn != null) conn.close();
             } catch (SQLException e) {
-                System.err.println("⚠️ Error cerrando la conexión: " + e.getMessage());
+                System.err.println("Error cerrando la conexión: " + e.getMessage());
             }
         }
 
