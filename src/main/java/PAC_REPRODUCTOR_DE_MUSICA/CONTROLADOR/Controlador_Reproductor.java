@@ -57,12 +57,13 @@ public class Controlador_Reproductor extends HttpServlet {
         switch (accion) {
             case "crearCancion":
                 gestor.crearCancion(seleccion);
-                // Reproducir automáticamente al seleccionar una canción
+                request.setAttribute("datosMusica", gestor.verDatosMusica());
                 request.setAttribute("mensaje", gestor.reproducirMusica());
                 break;
 
             case "crearMelodia":
                 gestor.crearMelodia(seleccion);
+                request.setAttribute("datosMusica", gestor.verDatosMusica());
                 request.setAttribute("mensaje", gestor.reproducirMusica());
                 break;
 

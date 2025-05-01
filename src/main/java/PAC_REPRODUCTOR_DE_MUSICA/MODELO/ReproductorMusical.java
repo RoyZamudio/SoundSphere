@@ -17,7 +17,7 @@ public class ReproductorMusical {
     }
 
     public String reproducir(Musica musica) {
-        if (musica == null) return "❌ No hay música cargada.";
+        if (musica == null) return "No hay música cargada.";
         reproduciendo = true;
 
         String nombreArtista = "Desconocido";
@@ -25,7 +25,7 @@ public class ReproductorMusical {
             nombreArtista = obtenerNombreArtista(musica.getIdArtista());
         }
 
-        return "▶️ Reproduciendo: " + musica.getTitulo() + " - " + nombreArtista;
+        return "Reproduciendo: " + musica.getTitulo() + " - " + nombreArtista;
     }
 
     private String obtenerNombreArtista(int idArtista) {
@@ -43,7 +43,7 @@ public class ReproductorMusical {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("⚠️ Error al obtener nombre del artista: " + e.getMessage());
+            System.err.println("Error al obtener nombre del artista: " + e.getMessage());
         }
 
         return nombreArtista;
@@ -51,27 +51,27 @@ public class ReproductorMusical {
 
     public void pausar() {
         reproduciendo = false;
-        System.out.println("⏸️ Música pausada.");
+        System.out.println("Música pausada.");
     }
 
     public void adelantar(Musica musica, int segundos) {
         if (!reproduciendo) {
-            System.out.println("⏩ No se puede adelantar: la música no está reproduciéndose.");
+            System.out.println("No se puede adelantar: la música no está reproduciéndose.");
             return;
         }
         int nuevoTiempo = Math.min(musica.getTiempoActual() + segundos, musica.getDuracion());
         musica.setTiempoActual(nuevoTiempo);
-        System.out.println("⏩ Adelantado " + segundos + " segundos.");
+        System.out.println("Adelantado " + segundos + " segundos.");
     }
 
     public void retroceder(Musica musica, int segundos) {
         if (!reproduciendo) {
-            System.out.println("⏪ No se puede retroceder: la música no está reproduciéndose.");
+            System.out.println("No se puede retroceder: la música no está reproduciéndose.");
             return;
         }
         int nuevoTiempo = Math.max(musica.getTiempoActual() - segundos, 0);
         musica.setTiempoActual(nuevoTiempo);
-        System.out.println("⏪ Retrocedido " + segundos + " segundos.");
+        System.out.println("Retrocedido " + segundos + " segundos.");
     }
 
     public boolean isReproduciendo() {

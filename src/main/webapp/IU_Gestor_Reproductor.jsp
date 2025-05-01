@@ -2,6 +2,7 @@
 <%@ page import="PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR.Cancion" %>
 <%@ page import="PAC_REPRODUCTOR_DE_MUSICA.MODELO.ReproductorMusical" %>
 <%@ page import="java.util.List" %>
+<%@ page import="PAC_SERVICIOS.FABRICAS_ABSTRACTAS.FABRICA_ABSTRACTA_REPRODUCTOR.Melodia" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -32,7 +33,7 @@
         <div class="nav-buttons">
             <button class="nav-button active">
                 <i class="fas fa-music"></i>
-                <span>Music Player</span>
+                <span>Reproductor</span>
             </button>
             <button class="nav-button">
                 <i class="fas fa-broadcast-tower"></i>
@@ -40,11 +41,11 @@
             </button>
             <button class="nav-button">
                 <i class="fas fa-users"></i>
-                <span>Social Network</span>
+                <span>Red Social</span>
             </button>
             <button class="nav-button">
                 <i class="fas fa-user"></i>
-                <span>User</span>
+                <span>Mi Cuenta</span>
             </button>
 
             <label class="dark-mode-toggle">
@@ -95,13 +96,23 @@
                             boolean isCurrentTrack = false;
                             Musica currentMusic = (Musica)request.getAttribute("musica");
                             if (currentMusic != null && currentMusic.getIdCancion() == pista.getIdCancion()) {
-                                isCurrentTrack = true;
+                                if ((currentMusic instanceof Cancion && pista instanceof Cancion) ||
+                                        (currentMusic instanceof Melodia && pista instanceof Melodia)) {
+                                    isCurrentTrack = true;
+                                }
+                            }
+
+                            // Check if the track is currently playing
+                            boolean isPlaying = false;
+                            ReproductorMusical reproductor = (ReproductorMusical)request.getAttribute("reproductor");
+                            if (reproductor != null && reproductor.isReproduciendo() && isCurrentTrack) {
+                                isPlaying = true;
                             }
                         %>
                         <div class="song-item <%= isCurrentTrack ? "active" : "" %>" data-id="<%= pista.getIdCancion() %>">
                             <div class="song-number"><%= index %></div>
                             <div class="song-play-icon">
-                                <i class="fas <%= isCurrentTrack ? "fa-pause" : "fa-play" %>"></i>
+                                <i class="fas <%= isPlaying ? "fa-pause" : "fa-play" %>"></i>
                             </div>
                             <div class="song-info">
                                 <div class="song-title"><%= pista.getTitulo() %></div>
@@ -109,7 +120,7 @@
                             </div>
                             <form method="post" action="reproductor" class="play-song-form">
                                 <input type="hidden" name="seleccion" value="<%= pista.getIdCancion() %>" />
-                                <input type="hidden" name="accion" value="crearCancion" />
+                                <input type="hidden" name="accion" value="<%= (pista instanceof Cancion) ? "crearCancion" : "crearMelodia" %>" />
                                 <button type="submit" class="play-song-button">
                                     <i class="fas fa-play"></i>
                                 </button>
@@ -158,14 +169,22 @@
                         <%
                             Musica currentMusic = (Musica)request.getAttribute("musica");
                             if (currentMusic != null && currentMusic.getImagen() != null && currentMusic.getImagen().length > 0) {
-                                String base64Image = java.util.Base64.getEncoder().encodeToString(currentMusic.getImagen());
+                                // Debug the image bytes
+                                byte[] imageData = currentMusic.getImagen();
+                                System.out.println("Image data first bytes: " +
+                                        (imageData.length > 0 ? String.format("%02X", imageData[0]) : "") + " " +
+                                        (imageData.length > 1 ? String.format("%02X", imageData[1]) : "") + " " +
+                                        (imageData.length > 2 ? String.format("%02X", imageData[2]) : "") + " " +
+                                        (imageData.length > 3 ? String.format("%02X", imageData[3]) : ""));
+
+                                // Use image/* MIME type to let browser determine format
+                                String base64Image = java.util.Base64.getEncoder().encodeToString(imageData);
                         %>
-                        <img src="data:image/jpeg;base64,<%= base64Image %>" alt="<%= currentMusic.getTitulo() %>" class="song-cover-image">
+                        <img src="data:image/*;base64,<%= base64Image %>" alt="<%= currentMusic.getTitulo() %>" class="song-cover-image">
                         <% } else { %>
                         <i class="fas fa-music"></i>
                         <% } %>
                     </div>
-
                     <%-- La información de la canción se actualiza dinámicamente --%>
                     <%
                         String datosMusica = (String) request.getAttribute("datosMusica");
@@ -174,6 +193,18 @@
                     <div class="song-details">
                         <%= datosMusica %>
                     </div>
+                    <!-- Audio player -->
+                    <%
+                        if (currentMusic != null && currentMusic.getAudio() != null && currentMusic.getAudio().length > 0) {
+                            String base64Audio = java.util.Base64.getEncoder().encodeToString(currentMusic.getAudio());
+                    %>
+                    <div class="audio-player-container">
+                        <audio controls autoplay id="audioPlayer">
+                            <source src="data:audio/mpeg;base64,<%= base64Audio %>" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    <% } %>
                     <%
                     } else {
                     %>
@@ -181,25 +212,6 @@
                     <%
                         }
                     %>
-
-                    <!-- Audio Player -->
-                    <% if (currentMusic != null && currentMusic.getAudio() != null && currentMusic.getAudio().length > 0) {
-                        String base64Audio = java.util.Base64.getEncoder().encodeToString(currentMusic.getAudio());
-                    %>
-                    <div class="audio-player-container">
-                        <audio id="audioPlayer" controls>
-                            <source src="data:audio/mp3;base64,<%= base64Audio %>" type="audio/mp3">
-                            Tu navegador no soporta el elemento de audio.
-                        </audio>
-                    </div>
-                    <% } %>
-
-                    <form method="post" action="reproductor" class="info-form">
-                        <input type="hidden" name="accion" value="verDatos" />
-                        <button type="submit" class="info-button">
-                            <i class="fas fa-info-circle"></i> Ver información detallada
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -217,16 +229,24 @@
 
             <%-- Toggle play/pause button --%>
             <div class="play-pause-toggle">
+                <%
+                    // Determinar si el reproductor está reproduciendo actualmente
+                    boolean isReproduciendo = false;
+                    ReproductorMusical reproductor = (ReproductorMusical)request.getAttribute("reproductor");
+                    if (reproductor != null) {
+                        isReproduciendo = reproductor.isReproduciendo();
+                    }
+                %>
                 <form method="post" action="reproductor" id="playForm">
                     <input type="hidden" name="accion" value="play" />
-                    <button type="submit" class="play-button" id="playButton" <%= ((Musica)request.getAttribute("musica") != null && ((ReproductorMusical)request.getAttribute("reproductor") != null && ((ReproductorMusical)request.getAttribute("reproductor")).isReproduciendo())) ? "style=\"display: none;\"" : "" %>>
+                    <button type="submit" class="play-button" id="playButton" <%= isReproduciendo ? "style=\"display: none;\"" : "" %>>
                         <i class="fas fa-play"></i>
                     </button>
                 </form>
 
                 <form method="post" action="reproductor" id="pauseForm">
                     <input type="hidden" name="accion" value="pause" />
-                    <button type="submit" class="pause-button" id="pauseButton" <%= ((Musica)request.getAttribute("musica") != null && ((ReproductorMusical)request.getAttribute("reproductor") != null && ((ReproductorMusical)request.getAttribute("reproductor")).isReproduciendo())) ? "" : "style=\"display: none;\"" %>>
+                    <button type="submit" class="pause-button" id="pauseButton" <%= isReproduciendo ? "" : "style=\"display: none;\"" %>>
                         <i class="fas fa-pause"></i>
                     </button>
                 </form>
@@ -247,6 +267,20 @@
             </div>
             <span class="time-total">--:--</span>
         </div>
+
+        <!-- Display currently playing track info -->
+        <div class="now-playing-info">
+            <%
+                // Show currently playing track info
+                if (currentMusic != null) {
+                    // Simple artist name retrieval (could be enhanced to call DB)
+                    String tipoMusica = (currentMusic instanceof Cancion) ? "Canción" : "Melodía";
+                    out.print("Reproduciendo: " + currentMusic.getTitulo() + " (" + tipoMusica + ")");
+                } else {
+                    out.print("No hay canción seleccionada");
+                }
+            %>
+        </div>
     </div>
 </div>
 
@@ -256,32 +290,61 @@
         document.body.classList.toggle('light-mode');
     });
 
+    // Formato de tiempo en MM:SS
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "--:--";
+
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
     // Función para alternar entre play y pause
     function setupPlayPauseToggle() {
         const playButton = document.getElementById('playButton');
         const pauseButton = document.getElementById('pauseButton');
-        const playForm = document.getElementById('playForm');
-        const pauseForm = document.getElementById('pauseForm');
+        const audioPlayer = document.getElementById('audioPlayer');
 
-        if (playButton && pauseButton) {
-            // Al hacer clic en play, enviar el formulario y actualizar el estado
+        if (playButton && pauseButton && audioPlayer) {
+            // Al hacer clic en play, reproducir audio y actualizar el estado
             playButton.addEventListener('click', function(e) {
-                // No prevenimos el envío del formulario para que se comunique con el backend
+                // Prevent default form submission to handle it ourselves
+                e.preventDefault();
 
-                // También actualizamos los iconos en la lista
+                // Play the audio
+                audioPlayer.play().catch(error => {
+                    console.error("Error playing audio:", error);
+                });
+
+                // Show pause button, hide play button
+                playButton.style.display = 'none';
+                pauseButton.style.display = 'block';
+
+                // Update all play/pause states
                 updateAllPlayPauseStates(true);
 
-                // No devolvemos false para permitir que el formulario se envíe
+                // Submit the form to update server state
+                document.getElementById('playForm').submit();
             });
 
-            // Al hacer clic en pausa, enviar el formulario y actualizar el estado
+            // Al hacer clic en pausa, pausar audio y actualizar el estado
             pauseButton.addEventListener('click', function(e) {
-                // No prevenimos el envío del formulario para que se comunique con el backend
+                // Prevent default form submission to handle it ourselves
+                e.preventDefault();
 
-                // También actualizamos los iconos en la lista
+                // Pause the audio
+                audioPlayer.pause();
+
+                // Show play button, hide pause button
+                pauseButton.style.display = 'none';
+                playButton.style.display = 'block';
+
+                // Update all play/pause states
                 updateAllPlayPauseStates(false);
 
-                // No devolvemos false para permitir que el formulario se envíe
+                // Submit the form to update server state
+                document.getElementById('pauseForm').submit();
             });
         }
     }
@@ -316,10 +379,6 @@
                     // Pero si se hace clic en el icono, cambiamos entre play/pause
                     if (e.target.closest('.song-play-icon')) {
                         const isPlaying = this.querySelector('.song-play-icon i').classList.contains('fa-pause');
-
-                        // Actualizar el estado visual de los botones del player principal
-                        const playButton = document.getElementById('playButton');
-                        const pauseButton = document.getElementById('pauseButton');
 
                         if (isPlaying) {
                             // Si está reproduciendo, pausamos
@@ -375,58 +434,41 @@
         });
     }
 
-    // Audio player synchronization
-    function setupAudioSync() {
+    // Configurar la actualización de la barra de progreso
+    function setupProgressBar() {
         const audioPlayer = document.getElementById('audioPlayer');
-        const playButton = document.getElementById('playButton');
-        const pauseButton = document.getElementById('pauseButton');
-        const playForm = document.getElementById('playForm');
-        const pauseForm = document.getElementById('pauseForm');
+        if (audioPlayer) {
+            // Update the progress bar as the audio plays
+            audioPlayer.addEventListener('timeupdate', function() {
+                const currentTime = audioPlayer.currentTime;
+                const duration = audioPlayer.duration;
 
-        if (audioPlayer && playButton && pauseButton) {
-            // Sync HTML5 audio player with custom play/pause buttons
-            audioPlayer.addEventListener('play', function() {
-                playButton.style.display = 'none';
-                pauseButton.style.display = 'flex';
-                updateAllPlayPauseStates(true);
+                // Update progress bar
+                if (!isNaN(duration)) {
+                    const progressFilled = document.querySelector('.progress-filled');
+                    if (progressFilled) {
+                        progressFilled.style.width = (currentTime / duration) * 100 + '%';
+                    }
 
-                // Prevent form submission when audio controls are used directly
-                if (playForm) {
-                    playForm.onsubmit = function(e) {
-                        e.preventDefault();
-                        return false;
-                    };
+                    // Update time displays
+                    const timeCurrentEl = document.querySelector('.time-current');
+                    const timeTotalEl = document.querySelector('.time-total');
+
+                    if (timeCurrentEl) {
+                        timeCurrentEl.textContent = formatTime(currentTime);
+                    }
+
+                    if (timeTotalEl) {
+                        timeTotalEl.textContent = formatTime(duration);
+                    }
                 }
             });
 
-            audioPlayer.addEventListener('pause', function() {
-                pauseButton.style.display = 'none';
-                playButton.style.display = 'flex';
-                updateAllPlayPauseStates(false);
-
-                // Prevent form submission when audio controls are used directly
-                if (pauseForm) {
-                    pauseForm.onsubmit = function(e) {
-                        e.preventDefault();
-                        return false;
-                    };
-                }
-            });
-
-            // Make custom buttons control the audio player
-            playButton.addEventListener('click', function(e) {
-                if (audioPlayer) {
-                    e.preventDefault(); // Prevent form submission
-                    audioPlayer.play();
-                    return false;
-                }
-            });
-
-            pauseButton.addEventListener('click', function(e) {
-                if (audioPlayer) {
-                    e.preventDefault(); // Prevent form submission
-                    audioPlayer.pause();
-                    return false;
+            // When audio is loaded, update total duration
+            audioPlayer.addEventListener('loadedmetadata', function() {
+                const timeTotalEl = document.querySelector('.time-total');
+                if (timeTotalEl && !isNaN(audioPlayer.duration)) {
+                    timeTotalEl.textContent = formatTime(audioPlayer.duration);
                 }
             });
         }
@@ -436,13 +478,33 @@
     document.addEventListener('DOMContentLoaded', function() {
         setupPlayPauseToggle();
         setupSongListHandlers();
-        setupAudioSync();
+        setupProgressBar();
 
         // Comprobamos si hay una canción activa al cargar la página
         const activeItem = document.querySelector('.song-item.active');
         if (activeItem) {
             const songId = activeItem.getAttribute('data-id');
             console.log('Canción activa al cargar: ' + songId);
+        }
+
+        // Si el audio está disponible, aplicamos estilos para ocultarlo visualmente
+        const audioContainer = document.querySelector('.audio-player-container');
+        if (audioContainer) {
+            audioContainer.style.margin = '0';
+            audioContainer.style.width = '0';
+            audioContainer.style.height = '0';
+            audioContainer.style.overflow = 'hidden';
+
+            const audioPlayer = document.getElementById('audioPlayer');
+            if (audioPlayer) {
+                audioPlayer.style.width = '0';
+                audioPlayer.style.height = '0';
+                audioPlayer.style.opacity = '0';
+                audioPlayer.style.position = 'absolute';
+
+                // Remove controls attribute but keep autoplay
+                audioPlayer.removeAttribute('controls');
+            }
         }
     });
 </script>

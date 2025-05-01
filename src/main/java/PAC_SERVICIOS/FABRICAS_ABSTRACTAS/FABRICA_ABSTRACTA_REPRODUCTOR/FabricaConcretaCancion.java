@@ -37,9 +37,10 @@ public class FabricaConcretaCancion extends FabricaAbstractaMusica {
                 String fecha = rs.getString("fechaLanzamiento");
                 String videoURL = rs.getString("enlaceVideo");
 
-                // 👇 Obtener binarios
-                byte[] imagen = rs.getBytes("imagenPortada");
-                byte[] audio = rs.getBytes("archivoAudio");
+                byte[] imagen = rs.getBytes("imagen");
+                byte[] audio = rs.getBytes("audio");
+                System.out.println("Retrieved image size: " + (imagen != null ? imagen.length : 0) + " bytes");
+                System.out.println("Retrieved audio size: " + (audio != null ? audio.length : 0) + " bytes");
 
                 // Convertir la letra (TEXT) a lista de versos
                 List<String> letra = new ArrayList<>();
