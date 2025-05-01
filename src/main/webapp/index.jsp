@@ -6,6 +6,6 @@
 </head>
 <body>
 <h2>Página JSP de prueba</h2>
-<p><a href="hello">Ir al HelloServlet para Gamaliel </a></p>
+<p><a href="hello">Ir al HelloServlet para Gamaliel prueba push</a></p>
 </body>
 </html>
