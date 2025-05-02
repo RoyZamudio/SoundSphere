@@ -25,7 +25,7 @@ public class Controlador_Registro extends HttpServlet {
         if (resultado) {
             response.sendRedirect(contextPath + "/IU_InicioSesion.jsp");
         } else {
-            // Redirigir de vuelta al formulario de registro con un mensaje de error
+
             response.sendRedirect(contextPath + "/IU_Registro.jsp");
         }
     }
