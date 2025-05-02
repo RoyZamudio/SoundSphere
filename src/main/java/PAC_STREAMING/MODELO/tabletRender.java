@@ -7,7 +7,7 @@ public class tabletRender implements PlataformaRender{
     public void renderizar(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("Renderizando para plataforma TABLET.");
         try {
-            request.getRequestDispatcher("../../../webapp/enVivo.jsp").forward(request, response);
+            request.getRequestDispatcher("enVivo.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }

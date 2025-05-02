@@ -26,6 +26,7 @@ public class Controlador_VentasPagos extends HttpServlet{
             Perfil perfil = cuentaOyente.getPerfil();
             System.out.println(perfil.getTipoCuenta());
             idOyente = perfil.getIdUsuario();
+            System.out.println(idOyente);
         }
         else{
             idOyente = -10;
