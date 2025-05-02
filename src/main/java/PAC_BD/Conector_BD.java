@@ -8,7 +8,7 @@ public class Conector_BD {
 
     private static final String URL = "jdbc:mysql://localhost:3306/SoundSphere?allowPublicKeyRetrieval=true&useSSL=false";
     private static final String USER = "root";
-    private static final String PASSWORD = "1234"; //
+    private static final String PASSWORD = "09082002"; //
 
     public static Connection conectar() throws SQLException {
         try {
