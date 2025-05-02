@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Registro en SoundSphere</h1>
+    <h1>Registrate en SoundSphere</h1>
     <%
         String error = request.getParameter("error");
         if ("true".equals(error)) {

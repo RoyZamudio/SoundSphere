@@ -54,6 +54,10 @@ form {
     gap: 12px;
 }
 
+form button{
+    margin-bottom: 10px;
+}
+
 /* Etiquetas */
 label {
     font-weight: bold;

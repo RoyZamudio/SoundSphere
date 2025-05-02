@@ -31,7 +31,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>Inicio de Sesión SoundSphere</h1>
+  <h1>Iniciar Sesión</h1>
   <%
     String error = request.getParameter("error");
     if ("true".equals(error)) {

@@ -126,7 +126,7 @@
         </div>
 
         <div class="d-grid gap-2">
-            <a href="index.jsp" class="btn btn-outline-secondary">🔁 Volver al inicio de pagos</a>
+            <a href="IU_Gestor_Pagos.jsp" class="btn btn-outline-secondary">🔁 Volver al inicio de pagos</a>
             <form action="IU_Gestor_Pagos.jsp" method="get">
                 <input type="hidden" name="idUsuario" value="<%= idUsuario %>" />
                 <button class="btn btn-accent w-100 mt-2">🎬 Volver al Streaming</button>
