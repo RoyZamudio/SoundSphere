@@ -1,0 +1,106 @@
+:root {
+    --color1: #F6EDDC; /* Fondo principal */
+    --color2: #E3E5D7; /* Tarjetas */
+    --color3: #BDD6D2; /* Botones */
+    --color4: #A5C8CA; /* Encabezados */
+    --color5: #586875; /* Texto principal */
+}
+
+body {
+    background-color: var(--color1);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--color5);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+}
+
+.contenedor-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+h1 {
+    color: var(--color4);
+    margin-bottom: 20px;
+}
+
+.formulario-pago {
+    background-color: var(--color2);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(88, 104, 117, 0.2);
+    width: 100%;
+    max-width: 500px;
+}
+
+.seccion {
+    margin-bottom: 25px;
+}
+
+.seccion h3 {
+    color: var(--color4);
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="month"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid var(--color4);
+    border-radius: 8px;
+    background-color: white;
+    font-size: 16px;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+button {
+    background-color: var(--color3);
+    color: var(--color5);
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--color4);
+}
+
+/* Estilo especial para el botÃ³n de Apple Pay */
+.boton-applepay {
+    background: linear-gradient(to right, #000000, #333333); /* Fondo degradado */
+    color: white;
+    font-size: 20px;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: none;
+    margin-top: 15px;
+    width: 100%;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.boton-applepay:hover {
+    transform: scale(1.05);
+    background: linear-gradient(to right, #333333, #000000);
+}
+
+/* Imagen del cÃ³digo de barras */
+img {
+    margin-top: 10px;
+    width: 250px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}

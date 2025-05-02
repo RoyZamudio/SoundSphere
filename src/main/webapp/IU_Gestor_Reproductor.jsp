@@ -31,15 +31,15 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="nav-button active">
+            <button class="nav-button active" onclick="location.href='reproductor'">
                 <i class="fas fa-music"></i>
                 <span>Reproductor</span>
             </button>
-            <button class="nav-button">
-                <i class="fas fa-broadcast-tower"></i>
+            <button class="nav-button" onclick="location.href='Streaming'">
+                <i class="fas fa-broadcast-tower" ></i>
                 <span>Streaming</span>
             </button>
-            <button class="nav-button">
+            <button class="nav-button" onclick="location.href='controlador-publicaciones'">
                 <i class="fas fa-users"></i>
                 <span>Red Social</span>
             </button>
