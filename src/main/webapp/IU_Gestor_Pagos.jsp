@@ -90,10 +90,6 @@
             <label for="applePay">Apple Pay</label><br><br>
         </div>
 
-        <div class="seccion">
-            <label><strong>ID del Oyente:</strong></label><br>
-            <input type="number" name="idOyente" required><br><br>
-        </div>
 
         <div id="datosTarjeta" class="seccion" style="display: none;">
             <h3>Datos de la Tarjeta</h3>

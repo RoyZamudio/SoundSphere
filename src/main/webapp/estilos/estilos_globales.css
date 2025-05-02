@@ -1,0 +1,100 @@
+/* Archivo: estilos_globales.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F6EDDC;
+    color: #333;
+    margin: 0;
+    padding: 0 20px;
+}
+
+h1, h2, h3 {
+    color: #586875;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #A5C8CA;
+    border-radius: 6px;
+    background-color: #E3E5D7;
+    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+input[type="submit"], button {
+    background-color: #586875;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+input[type="submit"]:hover, button:hover {
+    background-color: #A5C8CA;
+}
+
+/* Contenedor de mensajes */
+.mensaje {
+    background-color: #BDD6D2;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #586875;
+}
+
+.reacciones {
+    font-size: 0.9em;
+    color: #333;
+    margin-top: 5px;
+}
+
+/* Tarjetas de canal/evento */
+.card {
+    background-color: #E3E5D7;
+    border: 1px solid #A5C8CA;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Botón volver */
+.volver {
+    background-color: #BDD6D2;
+    color: #333;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.volver:hover {
+    background-color: #A5C8CA;
+}
+
+/* Reacción botón */
+.reaccion-btn {
+    background-color: #E3E5D7;
+    border: 1px solid #586875;
+    color: #586875;
+    padding: 6px 12px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.reaccion-btn:hover {
+    background-color: #586875;
+    color: white;
+}

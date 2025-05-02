@@ -1,5 +1,9 @@
 package PAC_VENTAS_Y_PAGOS.CONTROLADOR;
 
+import PAC_USUARIOS_Y_CUENTAS.MODELO.ConstructorCuentas;
+import PAC_USUARIOS_Y_CUENTAS.MODELO.CuentaOyente;
+import PAC_USUARIOS_Y_CUENTAS.MODELO.Perfil;
+import PAC_USUARIOS_Y_CUENTAS.MODELO.SesionCuenta;
 import PAC_VENTAS_Y_PAGOS.MODELO.*;
 import PAC_BD.Conector_BD;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +19,17 @@ import java.time.LocalDateTime;
 public class Controlador_VentasPagos extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String metodoPago = request.getParameter("metodoPago");
-        int idOyente = Integer.parseInt(request.getParameter("idOyente"));
+        ConstructorCuentas cuenta = SesionCuenta.getCuentaActual();
+        int idOyente;
+        if (cuenta instanceof CuentaOyente) {
+            CuentaOyente cuentaOyente = (CuentaOyente) cuenta;
+            Perfil perfil = cuentaOyente.getPerfil();
+            System.out.println(perfil.getTipoCuenta());
+            idOyente = perfil.getIdUsuario();
+        }
+        else{
+            idOyente = -10;
+        }
         boolean pagoExitoso = false;
 
         MetodoDePago metodo = switch (metodoPago) {

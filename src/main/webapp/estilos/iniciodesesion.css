@@ -1,0 +1,98 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #E3E5D7;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor principal */
+.container {
+    background-color: #BDD6D2;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 380px;
+}
+
+/* Título */
+h1 {
+    color: #586875;
+    font-size: 26px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Mensajes de estado */
+.mensaje-error {
+    background-color: #D9534F;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.mensaje-exito {
+    background-color: #5CB85C;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Etiquetas */
+label {
+    font-weight: bold;
+    color: #586875;
+    text-align: left;
+}
+
+/* Campos de entrada */
+input {
+    padding: 10px;
+    border: 1px solid #A5C8CA;
+    border-radius: 5px;
+    background-color: #F6EDDC;
+    color: #586875;
+}
+
+/* Botones */
+button {
+    padding: 12px;
+    background-color: #A5C8CA;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #586875;
+}
+
+/* Botón de registro */
+.registro-btn {
+    background-color: #E3E5D7;
+    color: #586875;
+    border: 2px solid #A5C8CA;
+}
+
+.registro-btn:hover {
+    background-color:#BDD6D2;
+}

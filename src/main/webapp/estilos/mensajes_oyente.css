@@ -1,0 +1,62 @@
+/* mensajes_oyente.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F6EDDC;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+h2 {
+    color: #586875;
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.mensaje-box {
+    background-color: #E3E5D7;
+    border-left: 5px solid #A5C8CA;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
+}
+
+.mensaje-box p {
+    margin: 5px 0;
+}
+
+img, video, audio {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+form {
+    margin-top: 10px;
+}
+
+input[type="submit"] {
+    background-color: #586875;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover {
+    background-color: #A5C8CA;
+}
+
+.reacciones {
+    font-size: 0.9em;
+    color: #333;
+    margin-top: 8px;
+}

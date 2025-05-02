@@ -57,7 +57,7 @@
     </div>
     <div class="box">
       <h3>Canales</h3>
-      <ul><li>Canal 1</li><li>Canal 2</li><li>Canal 3</li></ul>
+      <ul><li><button onclick="location.href='IU_CanalPrincipalOyente.jsp'">Ver más</button></li></ul>
     </div>
   </aside>
 
@@ -101,11 +101,11 @@
   <aside class="panel-derecho">
     <div class="bloque">
       <div class="box"><h3>Notificaciones</h3><ul><li>Notificación 1</li><li>Notificación 2</li><li>Notificación 3</li></ul></div>
-      <div class="box"><h3>Eventos</h3><ul><li>Evento 1</li><li>Evento 2</li><li>Evento 3</li></ul></div>
+      <div class="box"><h3>Eventos</h3><ul><li><button onclick="location.href='IU_EventoArtistaPrincipal.jsp'">Ver más</button></li></ul>
+    </div>
     </div>
   </aside>
 </div>
-
 <script>
   function mostrarVistaPrevia(input) {
     const preview = document.getElementById("vistaPreviaImagen");
